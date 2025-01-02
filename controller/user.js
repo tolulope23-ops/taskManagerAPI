@@ -5,21 +5,21 @@ const user = require('../model/user');
 const signUp = async(req, res) => {
     const { username, email, password } = req.body;
     try {
-        let newUser = await user.findOne({email});
-        if(newUser){
-            return res.status(404).json({
+        const emailAlreadyExist = await user.findOne({email});
+        if(emailAlreadyExist){
+            return res.status(StatusCodes.BAD_REQUEST).json({
                 success:false,
                 message:"User already has an account!",
                 data:{}
             });
         }
-            newUser = new user(req.body);
-            await newUser.save();
+            const user = new user(req.body);
+            await user.save();
             res.status(StatusCodes.CREATED).json({
                 success:true,
                 StatusCode:StatusCodes.CREATED,
                 message:"User SignedUp successfully...",
-                data:newUser
+                data:user
             });
 
     } catch (error) {
@@ -36,9 +36,9 @@ const signUp = async(req, res) => {
 const logIn = async(req, res) => {
     const {email, password} = req.body;
     try {
-        let userDetails = await user.findOne({email});
+        const isEmail = await user.findOne({email}); 
         const userPassword = userDetails.password;
-        if(!userDetails){
+        if(!isEmail){
             return res.status(404).json({
                 success:false,
                 message:"User does not exist",
@@ -55,7 +55,7 @@ const logIn = async(req, res) => {
             return res.status(200).json({
                 success:true,
                 message:"User exist, LogedIn Successfully",
-                data:`Welcome ${userDetails.username}`
+                data:`Welcome ${isEmail.username}`
             });
             
     } catch (error) {

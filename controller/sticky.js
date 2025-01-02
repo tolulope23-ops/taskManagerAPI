@@ -23,7 +23,6 @@ const addTodo = async (req, res, next) => {
 }
 
 const displayTodos = async(req, res, next) => {
-    const { title, content} = req.body;
     try {
         const todos = await Todo.find();
         if (!todos){
