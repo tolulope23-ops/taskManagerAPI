@@ -13,8 +13,8 @@ const addTodo = async (req, res, next) => {
             message:"Todo(s) sent successfully",
             data:{
                 id: todo._id,
-                title,
-                content,
+                title: todo.title,
+                content: todo.content,
             }
         });
     } catch (error) {

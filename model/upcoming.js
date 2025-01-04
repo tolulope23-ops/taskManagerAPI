@@ -1,7 +1,15 @@
 const mongoose = require('mongoose');
-const baseSchema = require('../model/todo');
 const upcomingSchema = new mongoose.Schema(
     {
+        title:{
+            type: String,
+            required:true,
+        },
+
+        content:{
+            type: String,
+        },
+
         todoType:{
             type:String,
             required:true
@@ -11,11 +19,8 @@ const upcomingSchema = new mongoose.Schema(
             type: Date,
             required: true
         }
-    },
-
-    {timestamps: true}
+    }
 );
 
-upcomingSchema.add(baseSchema);
 const upcoming = mongoose.model("Upcoming", upcomingSchema);
 module.exports = upcoming;

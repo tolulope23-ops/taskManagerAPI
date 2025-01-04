@@ -1,7 +1,15 @@
 const mongoose = require('mongoose');
-const baseSchema = require('../model/todo');
 const todaySchema = new mongoose.Schema(
     {
+        title:{
+            type: String,
+            required:true,
+        },
+
+        content:{
+            type: String,
+        },
+
         todoType:{
             type:String,
             required:true
@@ -11,11 +19,8 @@ const todaySchema = new mongoose.Schema(
             type: Date,
             required: true
         }
-    },
-
-    {timestamps: true}
+    }
 );
 
-todaySchema.add(baseSchema);
 const today = mongoose.model("today", todaySchema);
 module.exports = today; 

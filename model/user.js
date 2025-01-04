@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
-// const validator = require('validator');
 const userSchema = new mongoose.Schema(
     {
-        username:{
+        firstName:{
             type: String,
             required:true,
+        },
+
+        lastName:{
+            type: String
         },
 
         email: {
@@ -20,6 +23,8 @@ const userSchema = new mongoose.Schema(
         }
     }
 );
+
+
 
 const user = new mongoose.model("user", userSchema);
 module.exports = user;
