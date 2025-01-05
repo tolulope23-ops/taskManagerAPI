@@ -24,6 +24,7 @@ app.use("/api/v2/upcoming", upcomingRoute);
 app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 3000;
+
 const server = async() => {
     try {
         await connectDB();

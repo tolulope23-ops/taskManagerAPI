@@ -1,29 +1,33 @@
 const { StatusCodes } = require('http-status-codes');
-const user = require('../model/user');
+const User = require('../model/user');
 
 
 const signUp = async(req, res) => {
-    const { username, email, password } = req.body;
+    const { firstName, lastName, email, password} = req.body;
     try {
-        const emailAlreadyExist = await user.findOne({email});
-        if(emailAlreadyExist){
+        const userExist = await User.findOne({email});
+        if(userExist){
             return res.status(StatusCodes.BAD_REQUEST).json({
                 success:false,
-                message:"User already has an account!",
+                message:"User already has an Account!",
                 data:{}
             });
         }
-            const user = new user(req.body);
+            const user = new User(req.body);
             await user.save();
             res.status(StatusCodes.CREATED).json({
                 success:true,
                 StatusCode:StatusCodes.CREATED,
                 message:"User SignedUp successfully...",
-                data:user
+                data:{
+                    firstName,
+                    lastName,
+                    email,
+                    password
+                }
             });
 
     } catch (error) {
-        console.log(error.message);
         res.status(StatusCodes.BAD_REQUEST).json({
             success:false,
             StatusCode:StatusCodes.BAD_REQUEST,
@@ -33,39 +37,40 @@ const signUp = async(req, res) => {
     }
 };
 
-const logIn = async(req, res) => {
+const signIn = async(req, res) => {
     const {email, password} = req.body;
     try {
-        const isEmail = await user.findOne({email}); 
-        const userPassword = userDetails.password;
-        if(!isEmail){
+        const emailAlreadyExist = await User.findOne({email}); 
+        if(!emailAlreadyExist){
             return res.status(404).json({
-                success:false,
+                status:StatusCodes.NOT_FOUND,
                 message:"User does not exist",
                 data:{}
             });
         } 
-        if(password !== userPassword){
-            return res.status(404).json({
-                success:false,
+        if(password !== emailAlreadyExist.password){
+            return res.status(400).json({
+                status:StatusCodes.BAD_REQUEST,
                 message:"Incorrect Password",
                 data:{}
             }); 
         } 
-            return res.status(200).json({
-                success:true,
+            res.status(200).json({
+               status:StatusCodes.OK,
                 message:"User exist, LogedIn Successfully",
-                data:`Welcome ${isEmail.username}`
+                data: {
+                    email,
+                    password
+                }
             });
             
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({
-            success:false,
-            StatusCode:StatusCodes.BAD_REQUEST,
+        res.status(400).json({
+            status:StatusCodes.BAD_REQUEST,
             message:error.message,
             data:{}
         });
 }
 }
 
-module.exports = {signUp, logIn};
+module.exports = {signUp, signIn};
